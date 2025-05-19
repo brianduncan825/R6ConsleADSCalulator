@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>R6 Console ADS Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f4f4f4;
+      color: #333;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    label {
+      display: inline-block;
+      margin-bottom: 10px;
+      width: 48%;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      font-size: 1rem;
+    }
+    button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      font-size: 1.1rem;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      overflow-x: auto;
+      display: block;
+    }
+    thead, tbody, tr, th, td {
+      display: table;
+      width: 100%;
+      table-layout: fixed;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+      word-wrap: break-word;
+    }
+    th {
+      background-color: #ddd;
+    }
+    @media (max-width: 480px) {
+      label {
+        width: 100%;
+      }
+      table {
+        display: block;
+        overflow-x: auto;
+      }
+      thead, tbody, tr, th, td {
+        display: table;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>R6 Console ADS Calculator (FOV 90)</h1>
+  <label>Base Sensitivity:
+    <input type="number" id="baseSens" value="91" />
+  </label>
+  <label>ADS Multiplier:
+    <input type="number" id="adsMult" value="0.4" step="0.01" />
+  </label>
+  <button onclick="calculateADS()">Calculate</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Scope</th>
+        <th>Zoom Level</th>
+        <th>Zoom Factor</th>
+        <th>ADS Sensitivity</th>
+      </tr>
+    </thead>
+    <tbody id="adsTable"></tbody>
+  </table>
+
+  <script>
+    const baseZoom = 1.0;
+    const baseFactor = 0.7418;
+
+    function calculateADS() {
+      const base = parseFloat(document.getElementById('baseSens').value);
+      const mult = parseFloat(document.getElementById('adsMult').value);
+      const table = document.getElementById('adsTable');
+      table.innerHTML = '';
+
+      for (let zoom = 1.0; zoom <= 20.0; zoom += 0.5) {
+        const factor = baseFactor * (zoom / baseZoom);
+        const ads = Math.round(base * mult * factor);
+
+        const row = `<tr>
+          <td>${zoom.toFixed(1)}x</td>
+          <td>${zoom.toFixed(1)}</td>
+          <td>${factor.toFixed(4)}</td>
+          <td>${ads}</td>
+        </tr>`;
+        table.innerHTML += row;
+      }
+    }
+  </script>
+</body>
+</html>
